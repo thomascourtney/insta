@@ -38,6 +38,7 @@ export default function AddPostModal() {
         content,
       },
     });
+    handleClose();
   };
 
   return (

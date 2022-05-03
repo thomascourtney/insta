@@ -3,8 +3,8 @@ import { gql, useMutation } from "@apollo/client";
 import { Form } from "react-bootstrap";
 import Button from "@restart/ui/esm/Button";
 
-const SIGNUP = gql`
-  mutation Signup($email: String!, $password: String!) {
+const SIGNIN = gql`
+  mutation Signin($email: String!, $password: String!) {
     signin(credentials: { email: $email, password: $password }) {
       userErrors {
         message
@@ -15,13 +15,13 @@ const SIGNUP = gql`
 `;
 
 export default function Signin() {
-  const [signup, { data, loading }] = useMutation(SIGNUP);
+  const [signin, { data, loading }] = useMutation(SIGNIN);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleClick = () => {
-    signup({
+    signin({
       variables: {
         email,
         password,
