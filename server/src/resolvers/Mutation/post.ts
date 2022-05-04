@@ -23,26 +23,12 @@ export const postResolvers = {
     { prisma, userInfo }: Context
   ): Promise<PostPayloadType> => {
     if (!userInfo) {
-      return {
-        userErrors: [
-          {
-            message: "Forbidden access (unauthenticated)",
-          },
-        ],
-        post: null,
-      };
+      return forbiddenAccessErrorResponse();
     }
 
     const { title, content } = post;
     if (!title || !content) {
-      return {
-        userErrors: [
-          {
-            message: "You must provide title and content to create a post",
-          },
-        ],
-        post: null,
-      };
+      return errorResponse("You must provide title and content to create a post");
     }
 
     return {
@@ -62,14 +48,7 @@ export const postResolvers = {
     { prisma, userInfo }: Context
   ): Promise<PostPayloadType> => {
     if (!userInfo) {
-      return {
-        userErrors: [
-          {
-            message: "Forbidden access (unauthenticated)",
-          },
-        ],
-        post: null,
-      };
+      return forbiddenAccessErrorResponse();
     }
 
     const error = await canUserMutatePost({
@@ -83,14 +62,7 @@ export const postResolvers = {
     const { title, content } = post;
 
     if (!title && !content) {
-      return {
-        userErrors: [
-          {
-            message: "Need to have at least on e field to update",
-          },
-        ],
-        post: null,
-      };
+      return errorResponse("Need to have at least on e field to update");
     }
 
     const existingPost = await prisma.post.findUnique({
@@ -100,14 +72,7 @@ export const postResolvers = {
     });
 
     if (!existingPost) {
-      return {
-        userErrors: [
-          {
-            message: "Post does not exist",
-          },
-        ],
-        post: null,
-      };
+      return errorResponse("Post does not exist");
     }
 
     let payloadToUpdate = {
@@ -136,14 +101,7 @@ export const postResolvers = {
     { prisma, userInfo }: Context
   ): Promise<PostPayloadType> => {
     if (!userInfo) {
-      return {
-        userErrors: [
-          {
-            message: "Forbidden access (unauthenticated)",
-          },
-        ],
-        post: null,
-      };
+      return forbiddenAccessErrorResponse();
     }
 
     const error = await canUserMutatePost({
@@ -161,14 +119,7 @@ export const postResolvers = {
     });
 
     if (!post) {
-      return {
-        userErrors: [
-          {
-            message: "Post does not exist",
-          },
-        ],
-        post: null,
-      };
+      return errorResponse("Post does not exist");
     }
 
     await prisma.post.delete({
@@ -188,14 +139,7 @@ export const postResolvers = {
     { prisma, userInfo }: Context
   ): Promise<PostPayloadType> => {
     if (!userInfo) {
-      return {
-        userErrors: [
-          {
-            message: "Forbidden access (unauthenticated)",
-          },
-        ],
-        post: null,
-      };
+      return forbiddenAccessErrorResponse();
     }
 
     const error = await canUserMutatePost({
@@ -224,14 +168,7 @@ export const postResolvers = {
     { prisma, userInfo }: Context
   ): Promise<PostPayloadType> => {
     if (!userInfo) {
-      return {
-        userErrors: [
-          {
-            message: "Forbidden access (unauthenticated)",
-          },
-        ],
-        post: null,
-      };
+      return forbiddenAccessErrorResponse();
     }
 
     const error = await canUserMutatePost({
@@ -255,3 +192,18 @@ export const postResolvers = {
     };
   },
 };
+
+function forbiddenAccessErrorResponse(): PostPayloadType {
+  return errorResponse("Forbidden access (unauthenticated)");
+}
+
+function errorResponse(message: string): PostPayloadType {
+  return {
+    userErrors: [
+      {
+        message: message
+      }
+    ],
+    post: null,
+  };
+}
