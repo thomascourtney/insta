@@ -38,14 +38,7 @@ export const authResolvers = {
     const isEmail = validator.isEmail(email);
 
     if (!isEmail) {
-      return {
-        userErrors: [
-          {
-            message: "Invalid email",
-          },
-        ],
-        token: null,
-      };
+      return buildErrorResponse("Invalid email");
     }
 
     const isValidPassword = validator.isLength(password, {
@@ -53,25 +46,11 @@ export const authResolvers = {
     });
 
     if (!isValidPassword) {
-      return {
-        userErrors: [
-          {
-            message: "Invalid password",
-          },
-        ],
-        token: null,
-      };
+      return buildErrorResponse("Invalid password");
     }
 
     if (!name || !bio) {
-      return {
-        userErrors: [
-          {
-            message: "Invalid name or bio",
-          },
-        ],
-        token: null,
-      };
+      return buildErrorResponse("Invalid name or bio");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -118,19 +97,13 @@ export const authResolvers = {
     });
 
     if (!user) {
-      return {
-        userErrors: [{ message: "Invalid credentials" }],
-        token: null,
-      };
+      return buildErrorResponse("Invalid credentials");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return {
-        userErrors: [{ message: "Invalid credentials" }],
-        token: null,
-      };
+      return buildErrorResponse("Invalid credentials");
     }
 
     return {
@@ -141,3 +114,14 @@ export const authResolvers = {
     };
   },
 };
+
+function buildErrorResponse(message: string): UserPayload {
+  return {
+    userErrors: [
+      {
+        message: message
+      }
+    ],
+    token: null,
+  };
+}
