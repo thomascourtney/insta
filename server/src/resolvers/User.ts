@@ -10,7 +10,7 @@ export const User = {
 
     var filter:any = {}
     filter.authorId = parent.id;
-    if (isOwnProfile){
+    if (!isOwnProfile){
       filter.published = true;
     }
 
