@@ -22,6 +22,16 @@ const UNPUBLISH_POST = gql`
   }
 `;
 
+const DELETE_POST = gql`
+  mutation DeletePost($postId: ID!) {
+    postDelete(postId: $postId) {
+      post {
+        title
+      }
+    }
+  }
+`;
+
 export default function Post({
   title,
   content,
@@ -31,9 +41,10 @@ export default function Post({
   id,
   isMyProfile,
 }) {
-  const [publishPost, { data, loading }] = useMutation(PUBLISH_POST);
-  const [unpublishPost, { data: unpublishData, loading: unpublishLoading }] =
+  const [publishPost] = useMutation(PUBLISH_POST);
+  const [unpublishPost] =
     useMutation(UNPUBLISH_POST);
+  const [deletePost] = useMutation(DELETE_POST);
 
   const formatedDate = new Date(Number(date));
   return (
@@ -67,6 +78,20 @@ export default function Post({
           }}
         >
           unpublish
+        </p>
+      )}
+      {isMyProfile && (
+        <p
+          className="Post__delete"
+          onClick={() => {
+            deletePost({
+              variables: {
+                postId: id,
+              },
+            });
+          }}
+        >
+          delete
         </p>
       )}
       <div className="Post__header-container">

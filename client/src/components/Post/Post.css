@@ -8,16 +8,16 @@
 .Post__publish {
   position: absolute;
   right: 5px;
-  font-size: 7px;
   cursor: pointer;
 }
 
-.Post__header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.Post__delete {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  cursor: pointer;
 }
 
 .Post__header-container h4 {
-  font-size: 0.5rem;
+  font-size: 12px;
 }
