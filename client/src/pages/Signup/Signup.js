@@ -24,7 +24,10 @@ const SIGNUP = gql`
 `;
 
 export default function Signup() {
-  const [signup, { data }] = useMutation(SIGNUP);
+  const [signup, { mutationError, loading, data }] = useMutation(SIGNUP);
+
+  if (mutationError) return <div>Error Page</div>;
+  if (loading) return <div>Spinner...</div>;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
