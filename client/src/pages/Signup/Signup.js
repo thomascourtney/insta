@@ -24,15 +24,13 @@ const SIGNUP = gql`
 `;
 
 export default function Signup() {
-  const [signup, { mutationError, loading, data }] = useMutation(SIGNUP);
-
-  if (mutationError) return <div>Error Page</div>;
-  if (loading) return <div>Spinner...</div>;
+  const [signup, { data, mutationError, loading }] = useMutation(SIGNUP);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+  const [error, setError] = useState(null);
 
   const handleClick = () => {
     signup({
@@ -45,8 +43,6 @@ export default function Signup() {
     });
   };
 
-  const [error, setError] = useState(null);
-
   useEffect(() => {
     if (data) {
       if (data.signup.userErrors.length) {
@@ -57,6 +53,10 @@ export default function Signup() {
       }
     }
   }, [data]);
+
+  if (mutationError) return <div>Error Page</div>;
+  if (loading) return <div>Spinner...</div>;
+
   return (
     <div>
       <Form>
