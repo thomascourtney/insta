@@ -1,6 +1,4 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Post from "./components/Post/Post";
 import { Route, Switch } from "react-router";
 import Posts from "./pages/Posts/Posts";
 import Profile from "./pages/Profile/Profile";
